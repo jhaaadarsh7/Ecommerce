@@ -4,19 +4,33 @@ const ErrorHandler = require("../utils/errorhandler");
 const sendEmail = require("../utils/sendEmail")
 const crypto = require("crypto");
 const sendToken = require("../utils/jwtToken")
+const cloudinary = require('cloudinary').v2;
+
 //register   a user
 exports.registerUser = async(req, res , next)=>{
-    const {name , email ,password}= req.body;
+ 
+    try {
+      const {name , email ,password,avatar}= req.body;
+
+    const myCloud = await cloudinary.uploader
+    .upload(avatar, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    });
 
     const user = await User.create({
         name , email ,password,
         avatar :{
-            public_id:"this is a smple id",
-            url:"profilepicUrl"
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
         }
     })
 
     sendToken(user , 201 ,res);
+    } catch (error) {
+      console.log(error)
+    }
 }
 
 
@@ -194,23 +208,47 @@ exports.updatePassword = async (req, res, next) => {
 };
 
 //Update user profile
-exports.updateProfile= async (req, res, next) => {
+
+exports.updateProfile = async (req, res, next) => {
   try {
-   
-    const newUserData={
-      name:req.body.name,
-      email:req.body.email,
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email,
     };
 
-    const user = await User.findByIdAndUpdate(req.user.id , newUserData,{
-      new:true,
-      runValidators:true,
-      useFindAndModify:false,
-    })
+    if (req.body.avatar && req.body.avatar !== "") {
+      const user = await User.findById(req.user.id);
+      const imageId = user.avatar.public_id;
 
-res.status(200).json({
-  success:true
-})
+      // Destroy the existing image
+      if (imageId) {
+        await cloudinary.uploader.destroy(imageId);
+      }
+
+      // Upload the new image
+      const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+        crop: "scale",
+      });
+
+      newUserData.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
+
+    // Update user data in the database
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    res.status(200).json({
+      success: true,
+      user: updatedUser, // Include the updated user data in the response
+    });
   } catch (error) {
     next(error);
   }

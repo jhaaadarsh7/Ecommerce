@@ -5,7 +5,7 @@ const ErrorHandler = require("../utils/errorhandler");
 
 
 exports.createProduct = async (req, res, next) => {
-    console.log(req.body)
+  
     try { 
         // Validate input
         if (!req.body.name || !req.body.description || !req.body.price || !req.body.ratings || !req.body.category || !req.body.stock || !req.body.images) {
@@ -108,7 +108,6 @@ exports.getProductDetails = async (req, res, next) => {
     
     try {
         const productId = req.params.id;
-        console.log(productId, "product")
         // Find the product by ID
        
         let product = await productModel.findById(productId);
