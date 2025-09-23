@@ -1,0 +1,84 @@
+# ==============================
+# Node.js / Backend
+# ==============================
+
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# ==============================
+# React / Frontend
+# ==============================
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build output
+build/
+dist/
+
+# Cache
+.cache/
+.eslintcache
+
+# Coverage for tests
+coverage/
+
+# Log files
+*.log
+
+# ==============================
+# IDE / Editor / System
+# ==============================
+
+# VSCode
+.vscode/
+.history/
+
+# JetBrains IDEs
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Mac system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+
+# ==============================
+# Misc
+# ==============================
+
+# npm debug
+npm-debug.log*
+yarn-debug.log*
