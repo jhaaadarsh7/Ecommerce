@@ -53,7 +53,7 @@ export const getProduct = (
       link += `&category=${category}`;
     }      
     
-    const { data } = await axios.get(link);
+    const { data } = await axios.get(link, { withCredentials: true });
     
     dispatch({
       type: ALL_PRODUCT_SUCCESS,
@@ -62,7 +62,7 @@ export const getProduct = (
   } catch (error) {
     dispatch({
       type: ALL_PRODUCT_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Failed to load products",
     });
   } 
 };
@@ -70,7 +70,7 @@ export const getAdminProduct = () => async (dispatch) => {
   try {
     dispatch({ type: ADMIN_PRODUCT_REQUEST }); // Dispatches a request action before the API call
 
-    const { data } = await axios.get("/api/v1/admin/products"); // Makes an API call to get the products
+    const { data } = await axios.get("/api/v1/admin/products", { withCredentials: true }); // Makes an API call to get the products
 
     dispatch({
       type: ADMIN_PRODUCT_SUCCESS, // Dispatches success action if API call is successful
@@ -79,7 +79,7 @@ export const getAdminProduct = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ADMIN_PRODUCT_FAIL, // Dispatches fail action if there's an error
-      payload: error.response.data.message, // Payload contains the error message
+      payload: error.response?.data?.message || error.message || "Failed to load admin products", // Payload contains the error message
     });
   }
 };
@@ -88,7 +88,7 @@ export const getProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`/api/v1/products/${id}`);
+    const { data } = await axios.get(`/api/v1/products/${id}`, { withCredentials: true });
 
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
@@ -97,7 +97,7 @@ export const getProductDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Failed to load product",
     });
   }
 };
@@ -116,7 +116,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
     const { data } = await axios.put(
       `/api/v1/admin/products/${id}`, 
       productData,  // Pass FormData directly
-      config
+      { ...config, withCredentials: true }
     );
 
     dispatch({
@@ -127,7 +127,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
     console.error("Update Product Error:", error.response);
     dispatch({
       type: UPDATE_PRODUCT_FAIL,
-      payload: error.response?.data?.message || "Update Failed",
+      payload: error.response?.data?.message || error.message || "Update Failed",
     });
   }
 };
@@ -142,7 +142,7 @@ export const createProduct = (productData) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post(`/api/v1/admin/products/new`, productData, config);
+    const { data } = await axios.post(`/api/v1/admin/products/new`, productData, { ...config, withCredentials: true });
 
     dispatch({
       type: NEW_PRODUCT_SUCCESS,
@@ -151,7 +151,7 @@ export const createProduct = (productData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: NEW_PRODUCT_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Create product failed",
     });
   }
 };
@@ -165,7 +165,7 @@ export const newReview = (reviewData) => async (dispatch) => {
       headers: { "Content-Type": "application/json" },
     };
 
-    const { data } = await axios.put(`/api/v1/review`, reviewData, config);
+    const { data } = await axios.put(`/api/v1/review`, reviewData, { ...config, withCredentials: true });
 
     dispatch({
       type: NEW_REVIEW_SUCCESS,
@@ -174,7 +174,7 @@ export const newReview = (reviewData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: NEW_REVIEW_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Create review failed",
     });
   }
 };
@@ -185,7 +185,7 @@ export const deleteProduct = (id) => async (dispatch) => {
     dispatch({ type: DELETE_PRODUCT_REQUEST });
 
     // Change POST to DELETE
-    const { data } = await axios.delete(`/api/v1/admin/products/${id}`);
+    const { data } = await axios.delete(`/api/v1/admin/products/${id}`, { withCredentials: true });
 
     dispatch({
       type: DELETE_PRODUCT_SUCCESS,
@@ -194,7 +194,7 @@ export const deleteProduct = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: DELETE_PRODUCT_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Delete product failed",
     });
   }
 };
@@ -203,7 +203,7 @@ export const getAllReviews = (id) => async (dispatch) => {
   try {
     dispatch({ type: ALL_REVIEW_REQUEST });
 
-    const { data } = await axios.get(`/api/v1/reviews?id=${id}`);
+    const { data } = await axios.get(`/api/v1/reviews?id=${id}`, { withCredentials: true });
 
     dispatch({
       type: ALL_REVIEW_SUCCESS,
@@ -212,7 +212,7 @@ export const getAllReviews = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ALL_REVIEW_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Failed to load reviews",
     });
   }
 };
@@ -222,7 +222,8 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
     dispatch({ type: DELETE_REVIEW_REQUEST });
 
     const { data } = await axios.delete(
-      `/api/v1/reviews?id=${reviewId}&productId=${productId}`
+      `/api/v1/reviews?id=${reviewId}&productId=${productId}`,
+      { withCredentials: true }
     );
 
     dispatch({
@@ -232,7 +233,7 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: DELETE_REVIEW_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message || "Delete review failed",
     });
   }
 };

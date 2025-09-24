@@ -26,6 +26,18 @@ app.use(cors()); // Make sure CORS is enabled
 // Serve static files (images) - Ensure the correct path
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Root route for server status
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running successfully!",
+    status: "Active",
+    timestamp: new Date().toISOString(),
+    port: process.env.PORT || 4000,
+    environment: process.env.NODE_ENV || "development"
+  });
+});
+
 // Routes
 app.use("/api/v1", product);
 app.use("/api/v1", user);

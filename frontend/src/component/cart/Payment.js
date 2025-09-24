@@ -107,7 +107,7 @@ const Payment = () => {
       }
     } catch (error) {
       payBtn.current.disabled = false;
-      alert.error(error.response.data.message);
+      alert.error(error.response?.data?.message || error.message || "Payment failed");
     }
   };
 

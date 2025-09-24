@@ -1,6 +1,6 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import {thunk} from "redux-thunk"; // Correct import of thunk
-import { composeWithDevTools } from "redux-devtools-extension";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+import { thunk } from "redux-thunk";
+// Removed redux-devtools-extension to avoid runtime compose errors
 import {
   productsReducer,
   productdetailsReducer,
@@ -52,7 +52,7 @@ const middleware = [thunk];
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
+  applyMiddleware(...middleware)
 );
 
 export default store;
